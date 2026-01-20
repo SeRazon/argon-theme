@@ -1026,13 +1026,19 @@ function argon_comment_cmp($a, $b){
 	if ($b_pinned != "true"){
 		$b_pinned = "false";
 	}
+	// If both have same pinned status, sort by date
 	if ($a_pinned == $b_pinned){
-		return ($a -> comment_date_gmt) > ($b -> comment_date_gmt);
-	}else{
-		if ($a_pinned == "true"){
-			return ($GLOBALS['comment_order'] == 'desc');
+		if ($GLOBALS['comment_order'] == 'desc'){
+			return strcmp($b -> comment_date_gmt, $a -> comment_date_gmt);
 		}else{
-			return ($GLOBALS['comment_order'] != 'desc');
+			return strcmp($a -> comment_date_gmt, $b -> comment_date_gmt);
+		}
+	}else{
+		// Pinned comments come first (regardless of sort order)
+		if ($a_pinned == "true"){
+			return -1;
+		}else{
+			return 1;
 		}
 	}
 }
@@ -1070,7 +1076,7 @@ function argon_get_comments(){
 		return $comments;
 	}
 	if (!isset($_GET['fill_first_page']) && strpos(parse_url($_SERVER['REQUEST_URI'])['path'], 'comment-page-') !== false){
-		return null;
+		return array(); // Return empty array instead of null to avoid issues
 	}
 	$comments_per_page = get_option('comments_per_page');
 	$comments_count = 0; 
