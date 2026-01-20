@@ -267,11 +267,11 @@ function argon_comment_format($comment, $args, $depth){
 	$can_view = false;
 	if (!($comment -> placeholder) && user_can_view_comment(get_comment_ID())){
 		// If comment is approved, everyone can see it
-		if ($comment -> comment_approved == 1){
+		if ($comment -> comment_approved === "1"){
 			$can_view = true;
 		}
 		// If comment is not approved, only the author or admin can see it
-		elseif ($comment -> comment_approved == 0){
+		elseif ($comment -> comment_approved === "0"){
 			// Check if current user is the comment author (by token or user ID)
 			if (check_comment_token(get_comment_ID()) || check_login_user_same($comment -> user_id)){
 				$can_view = true;
@@ -362,13 +362,17 @@ function argon_comment_shuoshuo_preview_format($comment, $args, $depth){
 	// Check if user can view this comment (approval status)
 	$can_view = false;
 	// If comment is approved, everyone can see it
-	if ($comment -> comment_approved == 1){
+	if ($comment -> comment_approved === "1"){
 		$can_view = true;
 	}
-	// If comment is not approved, only the author or admin can see it
-	elseif ($comment -> comment_approved == 0){
+	// If comment is not approved, only the author, token holder, or admin can see it
+	elseif ($comment -> comment_approved === "0"){
 		// Check if current user is the comment author (by user ID)
 		if (check_login_user_same($comment -> user_id)){
+			$can_view = true;
+		}
+		// Check if the requester has a valid comment token (unauthenticated author)
+		elseif (check_comment_token(get_comment_ID())){
 			$can_view = true;
 		}
 		// Check if current user is admin/moderator
