@@ -271,13 +271,13 @@ function argon_comment_format($comment, $args, $depth){
 			$can_view = true;
 		}
 		// If comment is not approved, only the author or admin can see it
-		else if ($comment -> comment_approved == 0){
+		elseif ($comment -> comment_approved == 0){
 			// Check if current user is the comment author (by token or user ID)
 			if (check_comment_token(get_comment_ID()) || check_login_user_same($comment -> user_id)){
 				$can_view = true;
 			}
 			// Check if current user is admin/moderator
-			else if (current_user_can('moderate_comments')){
+			elseif (current_user_can('moderate_comments')){
 				$can_view = true;
 			}
 		}
@@ -366,13 +366,13 @@ function argon_comment_shuoshuo_preview_format($comment, $args, $depth){
 		$can_view = true;
 	}
 	// If comment is not approved, only the author or admin can see it
-	else if ($comment -> comment_approved == 0){
+	elseif ($comment -> comment_approved == 0){
 		// Check if current user is the comment author (by user ID)
 		if (check_login_user_same($comment -> user_id)){
 			$can_view = true;
 		}
 		// Check if current user is admin/moderator
-		else if (current_user_can('moderate_comments')){
+		elseif (current_user_can('moderate_comments')){
 			$can_view = true;
 		}
 	}
